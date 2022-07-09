@@ -84,27 +84,6 @@ export default {
           :show-answer="showAnswer"
           @check-answer="checkAnswer"
         ></Answer>
-        <!-- <div
-          v-for="answer in data.results[currentQuestion].shuffled_answers"
-          :key="answer"
-          class="rounded-xl p-1 ring-gray-400 transition"
-          :class="{ 'hover:ring-4': !showAnswer }"
-        >
-          <button
-            class="w-full bg-gray-200 rounded-lg p-4 transition md:text-lg md:p-6"
-            @click="checkAnswer(answer)"
-            v-html="answer"
-            :disabled="showAnswer"
-            :class="{
-              'bg-red-200':
-                showAnswer &&
-                answer != data.results[currentQuestion].correct_answer,
-              'bg-green-200':
-                showAnswer &&
-                answer == data.results[currentQuestion].correct_answer,
-            }"
-          ></button>
-        </div> -->
       </div>
     </div>
     <div class="basis-1/4 flex items-center justify-center">
