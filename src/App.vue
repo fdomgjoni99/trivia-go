@@ -1,21 +1,111 @@
-<script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import HelloWorld from './components/HelloWorld.vue'
+<script>
+export default {
+  data() {
+    return {
+      data: null,
+      currentQuestion: 0,
+      showAnswer: false,
+      score: 0,
+    };
+  },
+  created() {
+    fetch('https://opentdb.com/api.php?amount=10')
+      .then((res) => res.json())
+      .then((res) => {
+        res.results.map((item) => {
+          item.shuffled_answers = this.shuffle([
+            item.correct_answer,
+            ...item.incorrect_answers,
+          ]);
+          delete item.incorrect_answers;
+        });
+        console.log(res.results);
+        this.data = res;
+      });
+  },
+  methods: {
+    shuffle(array) {
+      let currentIndex = array.length,
+        randomIndex;
+      while (currentIndex != 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [
+          array[randomIndex],
+          array[currentIndex],
+        ];
+      }
+      return array;
+    },
+    checkAnswer(answer) {
+      if (this.data.results[this.currentQuestion].correct_answer == answer) {
+        this.score += 1;
+      }
+      this.showAnswer = true;
+    },
+  },
+};
 </script>
 
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + Vite" />
+  <div
+    v-if="data"
+    class="text-gray-600 mx-auto w-11/12 md:w-3/4 flex flex-col h-screen"
+  >
+    <div class="basis-1/4 flex flex-col items-center justify-center">
+      <div class="px-4 py-2 bg-gray-100 text-gray-500 mb-2 rounded-md">
+        Score: {{ score }}/{{ data.results.length }}
+      </div>
+      <span class="text-gray-400 mb-4 text-xs"
+        >Category: {{ data.results[currentQuestion].category }}</span
+      >
+      <h1
+        class="text-center text-lg font-medium md:text-xl"
+        v-html="data.results[currentQuestion].question"
+      ></h1>
+    </div>
+    <div class="basis-2/4 flex flex-col justify-center">
+      <div class="grid grid-cols-1 gap-4 md:gap-8 md:grid-cols-2">
+        <div
+          v-for="answer in data.results[currentQuestion].shuffled_answers"
+          :key="answer"
+          class="rounded-xl p-1 ring-gray-400 transition"
+          :class="{ 'hover:ring-4': !showAnswer }"
+        >
+          <button
+            class="w-full bg-gray-200 rounded-lg p-4 transition md:text-lg md:p-6"
+            @click="checkAnswer(answer)"
+            v-html="answer"
+            :disabled="showAnswer"
+            :class="{
+              'bg-red-200':
+                showAnswer &&
+                answer != data.results[currentQuestion].correct_answer,
+              'bg-green-200':
+                showAnswer &&
+                answer == data.results[currentQuestion].correct_answer,
+            }"
+          ></button>
+        </div>
+      </div>
+    </div>
+    <div class="basis-1/4 flex items-center justify-center">
+      <button
+        @click="
+          currentQuestion += 1;
+          showAnswer = false;
+        "
+        class="px-12 py-4 bg-gray-600 text-white text-lg rounded-lg w-1/3 hover:bg-gray-700 transition"
+        v-if="showAnswer"
+      >
+        Next
+      </button>
+    </div>
+  </div>
 </template>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+body {
+  font-family: 'Poppins';
 }
 </style>
