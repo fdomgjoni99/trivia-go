@@ -1,27 +1,34 @@
 <script>
 import Quiz from './components/Quiz.vue';
-import Options from './components/Options.vue';
+import Restart from './components/Restart.vue';
 export default {
   components: {
     Quiz,
-    Options,
+    Restart,
   },
-  data() {},
+  data() {
+    return {
+      score: 0,
+      quizEnded: false,
+    };
+  },
   created() {},
-  methods: {
-    categoryChanged(id) {
-      console.log(id);
-    },
-  },
+  methods: {},
 };
 </script>
 
 <template>
-  <div v-if="1 == 0">
-    <Options @category-changed="categoryChanged"></Options>
+  <div v-if="quizEnded">
+    <Restart
+      :score="score"
+      @restart-quiz="
+        quizEnded = false;
+        score = 0;
+      "
+    ></Restart>
   </div>
   <div v-else>
-    <Quiz></Quiz>
+    <Quiz @increment-score="score += 1" @quiz-ended="quizEnded = true"></Quiz>
   </div>
 </template>
 

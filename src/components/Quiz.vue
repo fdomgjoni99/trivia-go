@@ -10,25 +10,28 @@ export default {
       data: null,
       currentQuestion: 0,
       showAnswer: false,
-      score: 0,
     };
   },
   created() {
-    fetch('https://opentdb.com/api.php?amount=10&type=multiple')
-      .then((res) => res.json())
-      .then((res) => {
-        res.results.map((item) => {
-          item.shuffled_answers = this.shuffle([
-            item.correct_answer,
-            ...item.incorrect_answers,
-          ]);
-          delete item.incorrect_answers;
-        });
-        console.log(res.results);
-        this.data = res;
-      });
+    this.getData();
   },
   methods: {
+    getData() {
+      fetch('https://opentdb.com/api.php?amount=10&type=multiple')
+        .then((res) => res.json())
+        .then((res) => {
+          res.results.map((item) => {
+            item.shuffled_answers = this.shuffle([
+              item.correct_answer,
+              ...item.incorrect_answers,
+            ]);
+            delete item.incorrect_answers;
+          });
+          this.data = res;
+          this.currentQuestion = 0;
+          this.showAnswer = false;
+        });
+    },
     shuffle(array) {
       let currentIndex = array.length,
         randomIndex;
@@ -44,9 +47,16 @@ export default {
     },
     checkAnswer(answer) {
       if (this.data.results[this.currentQuestion].correct_answer == answer) {
-        this.score += 1;
+        this.$emit('incrementScore', 1);
       }
       this.showAnswer = true;
+    },
+    getNextQuestion() {
+      if (this.currentQuestion >= this.data.results.length - 1) {
+        return this.$emit('quizEnded');
+      }
+      this.currentQuestion += 1;
+      this.showAnswer = false;
     },
   },
 };
@@ -59,7 +69,7 @@ export default {
   >
     <div class="basis-1/4 flex flex-col items-center justify-center">
       <div class="px-4 py-2 bg-gray-100 text-gray-500 mb-2 rounded-md">
-        Score: {{ score }}/{{ data.results.length }}
+        Score: {{ $parent.score }}/{{ data.results.length }}
       </div>
       <span class="text-gray-400 mb-4 text-xs"
         >Category: {{ data.results[currentQuestion].category }}</span
@@ -87,19 +97,19 @@ export default {
       </div>
     </div>
     <div class="basis-1/4 flex items-center justify-center">
-      <Transition name="slide-fade">
+      <Transition name="grow-fade">
         <button
-          @click="
-            currentQuestion += 1;
-            showAnswer = false;
-          "
+          @click="getNextQuestion"
           class="px-12 py-4 bg-gray-600 text-white text-lg rounded-lg hover:bg-gray-700 transition w-full md:w-1/3"
-          v-if="showAnswer"
+          v-show="showAnswer"
         >
           Next
         </button>
       </Transition>
     </div>
+  </div>
+  <div v-else>
+    <h1 class="text-center mt-12 text-gray-500">Loading questions...</h1>
   </div>
 </template>
 
@@ -107,16 +117,16 @@ export default {
 body {
   font-family: 'Poppins';
 }
-.slide-fade-enter-active {
+.grow-fade-enter-active {
   transition: all 0.3s ease-out;
 }
 
-.slide-fade-leave-active {
+.grow-fade-leave-active {
   transition: all 1s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
-.slide-fade-enter-from,
-.slide-fade-leave-to {
+.grow-fade-enter-from,
+.grow-fade-leave-to {
   opacity: 0;
   transform: scale(0.8);
 }
