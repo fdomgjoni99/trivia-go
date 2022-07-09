@@ -9,7 +9,7 @@ export default {
     };
   },
   created() {
-    fetch('https://opentdb.com/api.php?amount=10')
+    fetch('https://opentdb.com/api.php?amount=10&type=multiple')
       .then((res) => res.json())
       .then((res) => {
         res.results.map((item) => {
@@ -90,16 +90,18 @@ export default {
       </div>
     </div>
     <div class="basis-1/4 flex items-center justify-center">
-      <button
-        @click="
-          currentQuestion += 1;
-          showAnswer = false;
-        "
-        class="px-12 py-4 bg-gray-600 text-white text-lg rounded-lg w-1/3 hover:bg-gray-700 transition"
-        v-if="showAnswer"
-      >
-        Next
-      </button>
+      <Transition name="slide-fade">
+        <button
+          @click="
+            currentQuestion += 1;
+            showAnswer = false;
+          "
+          class="px-12 py-4 bg-gray-600 text-white text-lg rounded-lg hover:bg-gray-700 transition w-full md:w-1/3"
+          v-if="showAnswer"
+        >
+          Next
+        </button>
+      </Transition>
     </div>
   </div>
 </template>
@@ -107,5 +109,18 @@ export default {
 <style>
 body {
   font-family: 'Poppins';
+}
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 1s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
 }
 </style>
