@@ -28,4 +28,8 @@ export default {
   </div>
 </template>
 
-<style></style>
+<style>
+body {
+  font-family: 'Epilogue';
+}
+</style>

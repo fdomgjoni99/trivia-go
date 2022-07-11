@@ -125,21 +125,18 @@ export default {
   </div>
 </template>
 
-<style>
-body {
-  font-family: 'Epilogue';
-}
+<style scoped>
 .grow-fade-enter-active {
-  transition: all 0.3s ease-out;
+  transition: all 0.2s ease-out;
 }
 
 .grow-fade-leave-active {
-  transition: all 1s cubic-bezier(1, 0.5, 0.8, 1);
+  transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
 .grow-fade-enter-from,
 .grow-fade-leave-to {
   opacity: 0;
-  transform: scale(0.8);
+  transform: scale(0.8) translateY(60px);
 }
 </style>
