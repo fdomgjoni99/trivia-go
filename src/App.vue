@@ -31,5 +31,6 @@ export default {
 <style>
 body {
   font-family: 'Epilogue';
+  background-color: #f9f9f9;
 }
 </style>

@@ -78,7 +78,7 @@ export default {
           ></div>
         </div>
         <div
-          class="border-4 border-gray-500 p-3 w-full rounded-lg shadow-xl flex items-center justify-center md:p-5 mb-3"
+          class="border-4 border-gray-400 p-3 w-full rounded-lg shadow-xl flex items-center justify-center md:p-5 mb-3"
         >
           <h1
             class="text-center font-medium md:text-lg"
