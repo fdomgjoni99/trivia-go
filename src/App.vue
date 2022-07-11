@@ -33,4 +33,11 @@ body {
   font-family: 'Epilogue';
   background-color: #f9f9f9;
 }
+input,
+textarea,
+button,
+select,
+a {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
 </style>
