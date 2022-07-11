@@ -60,7 +60,7 @@ export default {
 <template>
   <div
     v-if="data"
-    class="grid grid-rows-6 grid-cols-1 gap-4 text-gray-600 mx-auto w-11/12 md:w-3/4 h-screen"
+    class="grid grid-rows-6 grid-cols-1 gap-4 text-gray-600 mx-auto w-11/12 md:w-4/6 h-screen"
   >
     <div class="row-span-2">
       <div
@@ -78,10 +78,10 @@ export default {
           ></div>
         </div>
         <div
-          class="border-2 border-purple-500 p-3 w-full rounded-lg shadow-lg flex items-center justify-center md:p-5"
+          class="border-4 border-gray-500 p-3 w-full rounded-lg shadow-xl flex items-center justify-center md:p-5 mb-3"
         >
           <h1
-            class="text-center text-lg font-medium md:text-xl"
+            class="text-center font-medium md:text-lg"
             v-html="data.results[currentQuestion].question"
           ></h1>
         </div>
