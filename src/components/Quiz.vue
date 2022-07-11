@@ -1,5 +1,7 @@
 <script>
 import Answer from './Answer.vue';
+import { store } from '.././store';
+import { shuffle } from '.././helpers';
 
 export default {
   components: {
@@ -10,6 +12,7 @@ export default {
       data: null,
       currentQuestion: 0,
       showAnswer: false,
+      store,
     };
   },
   created() {
@@ -21,7 +24,7 @@ export default {
         .then((res) => res.json())
         .then((res) => {
           res.results.map((item) => {
-            item.shuffled_answers = this.shuffle([
+            item.shuffled_answers = shuffle([
               item.correct_answer,
               ...item.incorrect_answers,
             ]);
@@ -30,30 +33,22 @@ export default {
           this.data = res;
           this.currentQuestion = 0;
           this.showAnswer = false;
+          store.setQuestionCount(res.results.length);
         });
-    },
-    shuffle(array) {
-      let currentIndex = array.length,
-        randomIndex;
-      while (currentIndex != 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-        [array[currentIndex], array[randomIndex]] = [
-          array[randomIndex],
-          array[currentIndex],
-        ];
-      }
-      return array;
     },
     checkAnswer(answer) {
       if (this.data.results[this.currentQuestion].correct_answer == answer) {
-        this.$emit('incrementScore', 1);
+        this.store.incrementScore();
+        this.showAnswer = true;
+        this.data.results[this.currentQuestion].guessedRight = true;
+        return;
       }
+      this.data.results[this.currentQuestion].guessedRight = false;
       this.showAnswer = true;
     },
     getNextQuestion() {
       if (this.currentQuestion >= this.data.results.length - 1) {
-        return this.$emit('quizEnded');
+        return store.endQuiz();
       }
       this.currentQuestion += 1;
       this.showAnswer = false;
@@ -65,47 +60,64 @@ export default {
 <template>
   <div
     v-if="data"
-    class="text-gray-600 mx-auto w-11/12 md:w-3/4 flex flex-col h-screen"
+    class="grid grid-rows-6 grid-cols-1 gap-4 text-gray-600 mx-auto w-11/12 md:w-3/4 h-screen"
   >
-    <div class="basis-1/4 flex flex-col items-center justify-center">
-      <div class="px-4 py-2 bg-gray-100 text-gray-500 mb-2 rounded-md">
-        Score: {{ $parent.score }}/{{ data.results.length }}
-      </div>
-      <span class="text-gray-400 mb-4 text-xs"
-        >Category: {{ data.results[currentQuestion].category }}</span
+    <div class="row-span-2">
+      <div
+        class="min-h-full items-center justify-between py-4 rounded-lg flex flex-col items-center"
       >
-      <h1
-        class="text-center text-lg font-medium md:text-xl"
-        v-html="data.results[currentQuestion].question"
-      ></h1>
-    </div>
-    <div class="basis-2/4 flex flex-col justify-center">
-      <div class="grid grid-cols-1 gap-4 md:gap-8 md:grid-cols-2">
-        <Answer
-          v-for="answer in data.results[currentQuestion].shuffled_answers"
-          :key="answer"
-          :text="answer"
-          :is-valid-answer="
-            answer == data.results[currentQuestion].correct_answer
-          "
-          :is-invalid-answer="
-            answer != data.results[currentQuestion].correct_answer
-          "
-          :show-answer="showAnswer"
-          @check-answer="checkAnswer"
-        ></Answer>
+        <div class="flex my-4">
+          <div
+            v-for="(item, index) in data.results"
+            class="w-3 h-3 rounded text-white mx-1 text-center text-xs flex items-center justify-center"
+            :class="{
+              'bg-green-300': item.guessedRight,
+              'bg-red-300': item.guessedRight == false,
+              'bg-gray-200': !item.guessedRight,
+            }"
+          ></div>
+        </div>
+        <div
+          class="border-2 border-purple-500 p-3 w-full rounded-lg shadow-lg flex items-center justify-center md:p-5"
+        >
+          <h1
+            class="text-center text-lg font-medium md:text-xl"
+            v-html="data.results[currentQuestion].question"
+          ></h1>
+        </div>
       </div>
     </div>
-    <div class="basis-1/4 flex items-center justify-center">
-      <Transition name="grow-fade">
-        <button
-          @click="getNextQuestion"
-          class="px-12 py-4 bg-gray-600 text-white text-lg rounded-lg hover:bg-gray-700 transition w-full md:w-1/3"
-          v-show="showAnswer"
-        >
-          Next
-        </button>
-      </Transition>
+    <div class="row-span-3">
+      <div class="min-h-full flex flex-col justify-center">
+        <div class="grid grid-cols-1 gap-4 md:gap-8 md:grid-cols-2">
+          <Answer
+            v-for="answer in data.results[currentQuestion].shuffled_answers"
+            :key="answer"
+            :text="answer"
+            :is-valid-answer="
+              answer == data.results[currentQuestion].correct_answer
+            "
+            :is-invalid-answer="
+              answer != data.results[currentQuestion].correct_answer
+            "
+            :show-answer="showAnswer"
+            @check-answer="checkAnswer"
+          ></Answer>
+        </div>
+      </div>
+    </div>
+    <div class="">
+      <div class="min-h-full min-w-full flex items-center justify-center">
+        <Transition name="grow-fade">
+          <button
+            @click="getNextQuestion"
+            class="px-12 py-4 bg-gray-600 text-white text-lg rounded-lg hover:bg-gray-700 transition w-full md:w-1/3"
+            v-show="showAnswer"
+          >
+            Next
+          </button>
+        </Transition>
+      </div>
     </div>
   </div>
   <div v-else>
@@ -115,7 +127,7 @@ export default {
 
 <style>
 body {
-  font-family: 'Poppins';
+  font-family: 'Epilogue';
 }
 .grow-fade-enter-active {
   transition: all 0.3s ease-out;
