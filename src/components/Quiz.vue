@@ -60,7 +60,7 @@ export default {
 <template>
   <div
     v-if="data"
-    class="grid grid-rows-6 grid-cols-1 gap-4 text-gray-600 mx-auto w-11/12 md:w-4/6 h-screen"
+    class="grid grid-rows-6 grid-cols-1 gap-4 text-gray-600 mx-auto w-11/12 md:w-8/12 lg:w-7/12 h-screen overflow-y-hidden"
   >
     <div class="row-span-2">
       <div
