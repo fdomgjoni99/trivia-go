@@ -6,10 +6,6 @@ export default {
       store,
     };
   },
-  props: {
-    text: String,
-  },
-  methods: {},
 };
 </script>
 

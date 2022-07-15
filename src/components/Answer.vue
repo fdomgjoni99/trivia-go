@@ -6,10 +6,6 @@ export default {
     isInvalidAnswer: Boolean,
     showAnswer: Boolean,
   },
-  data() {
-    return {};
-  },
-  methods: {},
 };
 </script>
 

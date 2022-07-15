@@ -14,8 +14,6 @@ export default {
       store,
     };
   },
-  created() {},
-  methods: {},
 };
 </script>
 
