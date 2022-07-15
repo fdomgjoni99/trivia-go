@@ -10,7 +10,6 @@ export default {
   },
   data() {
     return {
-      score: 0,
       store,
     };
   },
