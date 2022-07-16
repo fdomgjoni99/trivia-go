@@ -1,11 +1,13 @@
 <script>
 import Quiz from './components/Quiz.vue';
+import Options from './components/Options.vue';
 import Restart from './components/Restart.vue';
 import { store } from './store';
 
 export default {
   components: {
     Quiz,
+    Options,
     Restart,
   },
   data() {
@@ -17,10 +19,13 @@ export default {
 </script>
 
 <template>
+  <div v-if="!store.category">
+    <Options></Options>
+  </div>
   <div v-if="store.quizEnded">
     <Restart></Restart>
   </div>
-  <div v-else>
+  <div v-show="!store.quizEnded && store.category">
     <Quiz></Quiz>
   </div>
 </template>
