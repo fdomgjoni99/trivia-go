@@ -6,26 +6,30 @@ export const store = reactive({
   questionCount: 0,
   quizEnded: false,
   data: null,
-  category: null,
-  loading: false,
+  options: null,
+  loading: true,
   currentQuestion: 0,
+  step: 0,
   showAnswer: false,
   incrementScore() {
     this.score++;
   },
   restartQuiz() {
     this.score = 0;
+    this.step = 0;
     this.questionCount = 0;
     this.quizEnded = false;
     this.data = null;
-    this.getData();
+    this.loading = true;
   },
   setQuestionCount(count) {
     this.questionCount = count;
   },
   getData() {
     this.loading = true;
-    fetch('https://opentdb.com/api.php?amount=10&type=multiple')
+    fetch(
+      `https://opentdb.com/api.php?category=${this.options.category}&amount=10`
+    )
       .then((res) => res.json())
       .then((res) => {
         res.results.map((item) => {
@@ -55,8 +59,13 @@ export const store = reactive({
   getNextQuestion() {
     if (this.currentQuestion >= this.data.results.length - 1) {
       this.quizEnded = true;
+      this.step = 2;
     }
     this.currentQuestion += 1;
     this.showAnswer = false;
+  },
+  startQuiz(payload) {
+    this.options = payload;
+    this.step = 1;
   },
 });

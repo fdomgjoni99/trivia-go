@@ -1,27 +1,6 @@
-<script>
-import Answer from './Answer.vue';
-import { store } from '.././store';
-import { shuffle } from '.././helpers';
-
-export default {
-  components: {
-    Answer,
-  },
-  data() {
-    return {
-      store,
-    };
-  },
-  created() {
-    this.store.getData();
-  },
-  methods: {},
-};
-</script>
-
 <template>
   <div
-    v-if="!store.loading && store.data"
+    v-if="store.data"
     class="grid grid-rows-6 grid-cols-1 gap-4 text-gray-600 mx-auto w-11/12 md:w-8/12 lg:w-7/12 h-screen overflow-y-hidden"
   >
     <div class="row-span-2">
@@ -83,10 +62,26 @@ export default {
       </div>
     </div>
   </div>
-  <div v-else>
-    <h1 class="text-center mt-12 text-gray-500">Loading questions...</h1>
-  </div>
 </template>
+
+<script>
+import Answer from './Answer.vue';
+import { store } from '../store';
+
+export default {
+  components: {
+    Answer,
+  },
+  data() {
+    return {
+      store,
+    };
+  },
+  created() {
+    this.store.getData();
+  },
+};
+</script>
 
 <style scoped>
 .grow-fade-enter-active {

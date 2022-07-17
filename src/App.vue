@@ -2,12 +2,14 @@
 import Quiz from './components/Quiz.vue';
 import Options from './components/Options.vue';
 import Restart from './components/Restart.vue';
+import Loader from './components/Loader.vue';
 import { store } from './store';
 
 export default {
   components: {
     Quiz,
     Options,
+    Loader,
     Restart,
   },
   data() {
@@ -19,14 +21,11 @@ export default {
 </script>
 
 <template>
-  <div v-if="!store.category">
-    <Options></Options>
-  </div>
-  <div v-if="store.quizEnded">
-    <Restart></Restart>
-  </div>
-  <div v-show="!store.quizEnded && store.category">
-    <Quiz></Quiz>
+  <div class="text-gray-700">
+    <Loader v-show="store.loading"></Loader>
+    <Options v-if="store.step == 0"></Options>
+    <Quiz v-if="store.step == 1"></Quiz>
+    <Restart v-if="store.step == 2"></Restart>
   </div>
 </template>
 
