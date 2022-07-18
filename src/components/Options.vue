@@ -1,5 +1,6 @@
 <template>
-  <div class="w-11/12 mx-auto grid grid-cols-1 gap-y-8 lg:w-5/12">
+  <Loader v-if="store.loading"></Loader>
+  <div v-else class="w-11/12 mx-auto grid grid-cols-1 gap-y-8 lg:w-5/12">
     <h1 class="text-center text-3xl my-12 font-bold">
       Trivia<span class="text-purple-500">GO</span>
     </h1>
@@ -155,6 +156,7 @@ import {
   ListboxOptions,
 } from '@headlessui/vue';
 import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid';
+import Loader from './Loader.vue';
 import { store } from '.././store';
 
 const categories = ref(null);

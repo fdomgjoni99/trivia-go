@@ -2,14 +2,12 @@
 import Quiz from './components/Quiz.vue';
 import Options from './components/Options.vue';
 import Restart from './components/Restart.vue';
-import Loader from './components/Loader.vue';
 import { store } from './store';
 
 export default {
   components: {
     Quiz,
     Options,
-    Loader,
     Restart,
   },
   data() {
@@ -22,7 +20,6 @@ export default {
 
 <template>
   <div class="text-gray-700">
-    <Loader v-show="store.loading"></Loader>
     <Options v-if="store.step == 0"></Options>
     <Quiz v-if="store.step == 1"></Quiz>
     <Restart v-if="store.step == 2"></Restart>
