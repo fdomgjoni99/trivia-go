@@ -2,7 +2,7 @@
   <Loader v-if="store.loading"></Loader>
   <div
     v-else
-    class="grid grid-rows-6 grid-cols-1 gap-4 text-gray-600 mx-auto w-11/12 md:w-8/12 lg:w-7/12 h-screen overflow-y-hidden"
+    class="grid grid-rows-6 grid-cols-1 gap-4 text-gray-600 mx-auto w-11/12 md:w-8/12 lg:w-7/12 overflow-y-hidden custom-height"
   >
     <div class="row-span-2">
       <div
@@ -99,5 +99,15 @@ export default {
 .grow-fade-leave-to {
   opacity: 0;
   transform: scale(0.8) translateY(60px);
+}
+.custom-height {
+  min-height: 100vh;
+}
+
+@media only screen and (max-width: 800px) {
+  .custom-height {
+    /* 92vh to make up for the toolbar in the mobile browser */
+    min-height: 92vh;
+  }
 }
 </style>
