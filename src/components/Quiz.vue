@@ -2,7 +2,7 @@
   <Loader v-if="store.loading"></Loader>
   <div
     v-else
-    class="grid grid-rows-6 grid-cols-1 gap-4 text-gray-600 mx-auto w-11/12 md:w-8/12 lg:w-7/12 overflow-y-hidden custom-height"
+    class="grid grid-rows-6 grid-cols-1 text-gray-600 mx-auto w-11/12 md:w-8/12 lg:w-7/12 overflow-y-hidden custom-height"
   >
     <div class="row-span-2">
       <div
@@ -31,7 +31,7 @@
     </div>
     <div class="row-span-3">
       <div class="min-h-full flex flex-col justify-center">
-        <div class="grid grid-cols-1 gap-4 md:gap-8 md:grid-cols-2">
+        <div class="grid grid-cols-1 gap-4 md:gap-4 md:grid-cols-2">
           <Answer
             v-for="answer in store.data.results[store.currentQuestion]
               .shuffled_answers"
